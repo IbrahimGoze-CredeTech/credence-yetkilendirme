@@ -1,13 +1,61 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Button from 'devextreme-react/button';
 import DataGrid, {
   Column, Editing, Paging, Lookup,
 } from 'devextreme-react/data-grid';
 
-import { employees, states } from './TestData';
+import { states } from './TestData'; // states'i sabit olarak tutabiliriz.
+
+// Roller ve Yetkiler tipleri
+interface Rol {
+  kisiId: number;
+  kisiAdi: string;
+  kisiSoyadi: string;
+  rolId: number;
+  rolAdi: string;
+  baslangicTarihi: string;
+  bitisTarihi: string;
+  talepEden: string;
+  onaylayan: string;
+  onaylanmaTarihi: string;
+}
+
+interface Yetki {
+  rolId: number;
+  rolAdi: string;
+  yetkiId: number;
+  yetkiAdi: string;
+  eylemlerTuruId: number;
+}
+
+interface ApiData {
+  kisiAdi: string;
+  kisiSoyadi: string;
+  roller: Rol[];
+  departman: string;
+  yetkiler: Yetki[];
+  ekstraYetkiler: any[];
+}
 
 const App = () => {
   const [events, setEvents] = useState<string[]>([]);
+  const [employees, setEmployees] = useState<Rol[]>([]); // API'den gelecek roller için state
+
+  useEffect(() => {
+    // API'den verileri fetch ile alma
+    fetch('https://localhost:7210/api/Kisi/butun-bilgiler/1') // API URL'nizi buraya ekleyin
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data: ApiData) => {
+        console.log("data: ", data);
+        setEmployees(data.roller); // Gelen roller verilerini employees state'ine set ediyoruz
+      })
+      .catch(error => console.error('There was a problem with your fetch operation:', error));
+  }, []);
 
   const logEvent = useCallback((eventName: string) => {
     setEvents((previousEvents) => [eventName, ...previousEvents]);
@@ -21,8 +69,8 @@ const App = () => {
     <React.Fragment>
       <DataGrid
         id="gridContainer"
-        dataSource={employees}
-        keyExpr="ID"
+        dataSource={employees} // Burada roller verisini kullanıyoruz
+        keyExpr="rolId" // 'rolId' ile her satırı tanımlıyoruz
         allowColumnReordering={true}
         showBorders={true}
         onEditingStart={() => logEvent('EditingStart')}
@@ -47,23 +95,15 @@ const App = () => {
           useIcons={true} // Bu satır ikonları etkinleştirir
         />
 
-        <Column dataField="Prefix" caption="Title" />
-        <Column dataField="FirstName" />
-        <Column dataField="LastName" />
-        <Column dataField="Position" width={130} />
-        <Column
-          dataField="StateID"
-          caption="State"
-          width={125}
-        >
-          <Lookup dataSource={states} displayExpr="Name" valueExpr="ID" />
-        </Column>
-        <Column
-          dataField="BirthDate"
-          width={125}
-          dataType="date" />
+        <Column dataField="kisiAdi" caption="Ad" />
+        <Column dataField="kisiSoyadi" caption="Soyad" />
+        <Column dataField="rolAdi" caption="Rol" />
+        <Column dataField="baslangicTarihi" caption="Start Date" dataType="date" />
+        <Column dataField="bitisTarihi" caption="End Date" dataType="date" />
+        <Column dataField="talepEden" caption="Requester" />
+        <Column dataField="onaylayan" caption="Approver" />
+        <Column dataField="onaylanmaTarihi" caption="Approval Date" dataType="date" />
       </DataGrid>
-
 
       <div id="events">
         <div>
