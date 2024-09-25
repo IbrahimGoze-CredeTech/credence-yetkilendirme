@@ -1,43 +1,20 @@
-#events {
-  background-color: rgba(191, 191, 191, 0.15) !important;
-  padding: 20px;
-  margin-top: 20px;
+.dx-datagrid-rowsview table,
+.dx-datagrid-headers table {
+  border-collapse: separate !important;
+  /* border-spacing: 4px !important; */
+  table-layout: fixed !important;
 }
 
-#events > div {
-  padding-bottom: 5px;
+.dx-datagrid-rowsview .dx-row > td {
+  border-bottom: 2px solid #e0e0e0 !important;
+  padding: 8px !important;
+  background-color: white !important;
+  box-sizing: border-box !important;
 }
-
-#events > div::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-#events #clear {
-  float: right;
-}
-
-#events .caption {
-  float: left;
-  font-weight: bold;
-  font-size: 115%;
-  line-height: 115%;
-  padding-top: 7px;
-}
-
-#events ul {
-  list-style: none;
-  max-height: 100px;
-  overflow: auto;
-  margin: 0;
-}
-
-#events ul li {
-  padding: 7px 0;
-  border-bottom: 1px solid #ddd;
-}
-
-#events ul li:last-child {
-  border-bottom: none;
+.dx-datagrid-headers .dx-header-row > td {
+  border-top: 2px solid #626262 !important;
+  border-bottom: 2px solid #626262 !important;
+  background-color: white !important;
+  box-sizing: border-box !important;
+  border: #626262 !important;
 }
