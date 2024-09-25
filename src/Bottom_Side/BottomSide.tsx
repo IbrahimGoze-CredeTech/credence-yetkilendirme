@@ -7,7 +7,9 @@ import DataGrid, {
   SearchPanel,
   Popup,
   Form,
+  FilterRow,
 } from "devextreme-react/data-grid";
+import authorityDataGridConfig from "../authority-data-grid-config";
 
 // Roller ve Yetkiler tipleri
 interface Rol {
@@ -77,21 +79,23 @@ const App = () => {
         keyExpr="rolId" // 'rolId' ile her satırı tanımlıyoruz
         allowColumnReordering={true}
         showBorders={true}
-        onEditingStart={() => logEvent("EditingStart")}
-        onInitNewRow={() => logEvent("InitNewRow")}
-        onRowInserting={() => logEvent("RowInserting")}
-        onRowInserted={() => logEvent("RowInserted")}
-        onRowUpdating={() => logEvent("RowUpdating")}
-        onRowUpdated={() => logEvent("RowUpdated")}
-        onRowRemoving={() => logEvent("RowRemoving")}
-        onRowRemoved={() => logEvent("RowRemoved")}
-        onSaving={() => logEvent("Saving")}
-        onSaved={() => logEvent("Saved")}
-        onEditCanceling={() => logEvent("EditCanceling")}
-        onEditCanceled={() => logEvent("EditCanceled")}
+        // onEditingStart={() => logEvent("EditingStart")}
+        // onInitNewRow={() => logEvent("InitNewRow")}
+        // onRowInserting={() => logEvent("RowInserting")}
+        // onRowInserted={() => logEvent("RowInserted")}
+        // onRowUpdating={() => logEvent("RowUpdating")}
+        // onRowUpdated={() => logEvent("RowUpdated")}
+        // onRowRemoving={() => logEvent("RowRemoving")}
+        // onRowRemoved={() => logEvent("RowRemoved")}
+        // onSaving={() => logEvent("Saving")}
+        // onSaved={() => logEvent("Saved")}
+        // onEditCanceling={() => logEvent("EditCanceling")}
+        // onEditCanceled={() => logEvent("EditCanceled")}
+        {...authorityDataGridConfig}
       >
+        <FilterRow visible={true} />
         {/* Arama panelini ekliyoruz */}
-        <SearchPanel visible={true} width={240} placeholder="Ara..." />
+        {/* <SearchPanel visible={true} width={240} placeholder="Ara..." /> */}
 
         <Paging enabled={true} />
         <Editing
@@ -108,48 +112,8 @@ const App = () => {
             width={700}
             height={600}
           />
-          {/* Düzenleme formunun nasıl görüneceğini yapılandırıyoruz */}
-          <Form>
-            {/* İlk griddeki sütunlar */}
-            <Column dataField="kisiAdi" />
-            <Column dataField="kisiSoyadi" />
-            <Column dataField="rolAdi" />
-            <Column dataField="baslangicTarihi" dataType="date" />
-            <Column dataField="bitisTarihi" dataType="date" />
-            <Column dataField="talepEden" />
-            <Column dataField="onaylayan" />
-            <Column dataField="onaylanmaTarihi" dataType="date" />
-
-            {/* İkinci griddeki yeni sütunlar */}
-            <Column dataField="yetkiAdi" caption="Yetki" />
-            <Column dataField="departman" />
-            <Column
-              dataField="siniflandirmaSeviyesi"
-              caption="Sınıflandırma Seviyesi"
-            />
-          </Form>
         </Editing>
 
-        <Column dataField="kisiAdi" caption="Ad" />
-        <Column dataField="kisiSoyadi" caption="Soyad" />
-        <Column dataField="rolAdi" caption="Rol" />
-        <Column
-          dataField="baslangicTarihi"
-          caption="Başlangıç Tarihi"
-          dataType="date"
-        />
-        <Column
-          dataField="bitisTarihi"
-          caption="Bitiş Tarihi"
-          dataType="date"
-        />
-        <Column dataField="talepEden" caption="Talep Eden" />
-        <Column dataField="onaylayan" caption="Onaylayan" />
-        <Column
-          dataField="onaylanmaTarihi"
-          caption="Onaylanma Tarihi"
-          dataType="date"
-        />
       </DataGrid>
 
       {/* Daha Fazla / Daha Az butonu */}
@@ -175,6 +139,7 @@ const App = () => {
           onRowRemoving={() => logEvent("MoreDataGridRowRemoving")}
           onRowRemoved={() => logEvent("MoreDataGridRowRemoved")}
         >
+          <FilterRow visible={true} />
           <Paging enabled={true} />
           <Editing
             mode="popup" // Burada da popup modunu etkinleştiriyoruz
