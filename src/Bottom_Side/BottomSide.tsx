@@ -8,54 +8,84 @@ import DataGrid, {
   Popup,
   Form,
   FilterRow,
+  MasterDetail,
 } from "devextreme-react/data-grid";
 import authorityDataGridConfig from "../authority-data-grid-config";
+import { Kisi, Yetki } from "../types";
+import { isYetkiArray } from "../utils";
 
 // Roller ve Yetkiler tipleri
-interface Rol {
-  kisiId: number;
-  kisiAdi: string;
-  kisiSoyadi: string;
-  rolId: number;
-  rolAdi: string;
-  baslangicTarihi: string;
-  bitisTarihi: string;
-  talepEden: string;
-  onaylayan: string;
-  onaylanmaTarihi: string;
-  yetkiAdi?: string; // İkinci griddeki alanlar
-  departman?: string;
-  siniflandirmaSeviyesi?: string;
-}
+// interface Rol {
+//   kisiId: number;
+//   kisiAdi: string;
+//   kisiSoyadi: string;
+//   rolId: number;
+//   rolAdi: string;
+//   baslangicTarihi: string;
+//   bitisTarihi: string;
+//   talepEden: string;
+//   onaylayan: string;
+//   onaylanmaTarihi: string;
+//   yetkiler: Yetki[];
+//   yetkiAdi: string; // İkinci griddeki alanlar
+//   departman?: string;
+//   siniflandirmaSeviyesi?: string;
+// }
 
-interface ApiData {
-  kisiAdi: string;
-  kisiSoyadi: string;
-  roller: Rol[];
-  departman: string;
-}
+// interface ApiData {
+//   kisiAdi: string;
+//   kisiSoyadi: string;
+//   roller: Rol[];
+//   departman: string;
+// }
+
+// Define a map of enums for Yetki
+// const YetkiEnum: { [key: number]: string } = {};
 
 const App = () => {
   const [events, setEvents] = useState<string[]>([]);
-  const [employees, setEmployees] = useState<Rol[]>([]); // API'den gelecek roller için state
+  const [employees, setEmployees] = useState<Kisi[]>([]); // API'den gelecek roller için state
   const [showMoreData, setShowMoreData] = useState(false); // Yeni grid'in görünürlüğü için state
+  const [yetkiler, setYetkiler] = useState<Yetki[]>([]);
+
 
   useEffect(() => {
-    // API'den verileri fetch ile alma
-    fetch("https://localhost:7210/api/Kisi/butun-bilgiler/1") // API URL'nizi buraya ekleyin
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
+    const fetchData = async () => {
+
+      // API'den verileri fetch ile alma
+      const yetkilerFetch = fetch('https://localhost:7210/api/Yetki').then((response) => {
+        if (!response.ok) throw new Error('Network response was not ok');
         return response.json();
-      })
-      .then((data: ApiData) => {
-        console.log("data: ", data);
-        setEmployees(data.roller); // Gelen roller verilerini employees state'ine set ediyoruz
-      })
-      .catch((error) =>
-        console.error("There was a problem with your fetch operation:", error)
-      );
+      });
+      const bilgilerFetch = fetch("https://localhost:7210/api/Kisi/butun-bilgiler/1") // API URL'nizi buraya ekleyin
+        .then((response) => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.json();
+        })
+      // .then((data: ApiData) => {
+      //   console.log("data: ", data);
+      //   setEmployees(data.roller); // Gelen roller verilerini employees state'ine set ediyoruz
+      // })
+      // .catch((error) =>
+      //   console.error("There was a problem with your fetch operation:", error)
+      // );
+      try {
+        const [bilgilerData, yetkilerData] = await Promise.all([bilgilerFetch, yetkilerFetch]);
+        if (bilgilerData && yetkilerData) {
+          setEmployees(bilgilerData);
+          console.log('bilgilerData: ', bilgilerData);
+
+          // console.log('yetkilerData: ', yetkilerData);
+
+          if (isYetkiArray(yetkilerData)) setYetkiler(yetkilerData);
+          else console.error("Data is not a valid Yetki array");
+
+        }
+      } catch (error) {
+        console.error("There was a problem with your fetch operation:", error);
+      }
+    }
+    fetchData();
   }, []);
 
   const logEvent = useCallback((eventName: string) => {
@@ -72,30 +102,25 @@ const App = () => {
   };
 
   return (
-    <React.Fragment>
+    <>
+      {/* <h2>Roller</h2>
+      <ul>
+      {yetkiler.map((yetki) => (
+        <li key={yetki.yetkiId}>
+            {yetki.yetkiId}: {yetki.yetkiAdi}
+          </li>
+          ))}
+          </ul> */}
+      {/* İlk grid */}
       <DataGrid
         id="gridContainer"
-        dataSource={employees} // Burada roller verisini kullanıyoruz
-        keyExpr="rolId" // 'rolId' ile her satırı tanımlıyoruz
+        dataSource={[employees]} // Burada roller verisini kullanıyoruz
+        keyExpr="kisiAdi" // 'rolId' ile her satırı tanımlıyoruz
         allowColumnReordering={true}
         showBorders={true}
-        // onEditingStart={() => logEvent("EditingStart")}
-        // onInitNewRow={() => logEvent("InitNewRow")}
-        // onRowInserting={() => logEvent("RowInserting")}
-        // onRowInserted={() => logEvent("RowInserted")}
-        // onRowUpdating={() => logEvent("RowUpdating")}
-        // onRowUpdated={() => logEvent("RowUpdated")}
-        // onRowRemoving={() => logEvent("RowRemoving")}
-        // onRowRemoved={() => logEvent("RowRemoved")}
-        // onSaving={() => logEvent("Saving")}
-        // onSaved={() => logEvent("Saved")}
-        // onEditCanceling={() => logEvent("EditCanceling")}
-        // onEditCanceled={() => logEvent("EditCanceled")}
-        {...authorityDataGridConfig}
+      // {...authorityDataGridConfig}
       >
         <FilterRow visible={true} />
-        {/* Arama panelini ekliyoruz */}
-        {/* <SearchPanel visible={true} width={240} placeholder="Ara..." /> */}
 
         <Paging enabled={true} />
         <Editing
@@ -113,6 +138,101 @@ const App = () => {
             height={600}
           />
         </Editing>
+
+        {/* Main Columns */}
+        <Column dataField="kisiAdi" caption="Ad" />
+        <Column dataField="kisiSoyadi" caption="Soyad" />
+        <Column dataField="departman" caption="Departman" />
+        {/* Master-Detail Configuration */}
+        <MasterDetail
+          enabled={true}
+          component={({ data }) => (
+            <>
+              {/* Roller Sub-grid */}
+              <h4>Roller</h4>
+              <DataGrid
+                dataSource={data.data.roller} // Nested data from roller
+                showBorders={true}
+
+              >
+                <Editing
+                  mode="popup" // Düzenleme işlemi popup içinde yapılacak
+                  allowUpdating={true}
+                  allowDeleting={true}
+                  allowAdding={true}
+                  useIcons={true}
+                >
+                  {/* Popup özelliklerini yapılandırıyoruz */}
+                  <Popup
+                    title="Rol Düzenle"
+                    showTitle={true}
+                    width={700}
+                    height={600}
+                  />
+                </Editing>
+                <Column dataField="rolAdi" caption="Rol Adı" />
+                <Column dataField="baslangicTarihi" caption="Başlangıç Tarihi" dataType="date" />
+                <Column dataField="bitisTarihi" caption="Bitiş Tarihi" dataType="date" />
+                <Column dataField="talepEden" caption="Talep Eden" />
+                <Column dataField="onaylayan" caption="Onaylayan" />
+                <Column dataField="onaylanmaTarihi" caption="Onaylanma Tarihi" dataType="date" />
+              </DataGrid>
+
+              {/* Yetkiler Sub-grid */}
+              <h4>Yetkiler</h4>
+              <DataGrid
+                dataSource={data.data.yetkiler} // Nested data from yetkiler
+                showBorders={true}
+              >
+                <Editing
+                  mode="popup" // Düzenleme işlemi popup içinde yapılacak
+                  allowUpdating={true}
+                  allowDeleting={true}
+                  allowAdding={true}
+                  useIcons={true}
+                >
+                  {/* Popup özelliklerini yapılandırıyoruz */}
+                  <Popup
+                    title="Rol Düzenle"
+                    showTitle={true}
+                    width={700}
+                    height={600}
+                  />
+                </Editing>
+                <Column dataField="yetkiAdi" caption="Yetki Adı" />
+                <Column dataField="rolAdi" caption="Rol Adı" />
+              </DataGrid>
+
+              {/* EkstraYetkiler Sub-grid */}
+              <h4>Ekstra Yetkiler</h4>
+              <DataGrid
+                dataSource={data.data.ekstraYetkiler} // Nested data from ekstraYetkiler
+                showBorders={true}
+              >
+                <Editing
+                  mode="popup" // Düzenleme işlemi popup içinde yapılacak
+                  allowUpdating={true}
+                  allowDeleting={true}
+                  allowAdding={true}
+                  useIcons={true}
+                >
+                  {/* Popup özelliklerini yapılandırıyoruz */}
+                  <Popup
+                    title="Rol Düzenle"
+                    showTitle={true}
+                    width={700}
+                    height={600}
+                  />
+                </Editing>
+                <Column dataField="yetkiAdi" caption="Yetki Adı" />
+                <Column dataField="ekstraYetkiBaslangicTarihi" caption="Başlangıç Tarihi" dataType="date" />
+                <Column dataField="ekstraYetkiBitisTarihi" caption="Bitiş Tarihi" dataType="date" />
+                <Column dataField="ekstraYetkiTalepEden" caption="Talep Eden" />
+                <Column dataField="ekstraYetkiOnaylayan" caption="Onaylayan" />
+              </DataGrid>
+            </>
+          )}
+        />
 
       </DataGrid>
 
@@ -192,7 +312,7 @@ const App = () => {
           ))}
         </ul>
       </div>
-    </React.Fragment>
+    </>
   );
 };
 
