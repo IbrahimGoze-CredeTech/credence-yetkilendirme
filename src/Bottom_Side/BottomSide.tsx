@@ -174,11 +174,6 @@ const App = () => {
       </DataGrid>
 
       {/* Daha Fazla / Daha Az butonu */}
-      <Button
-        text={showMoreData ? "Daha Az" : "Daha Fazla"} // Text state'e bağlı olarak değişiyor
-        onClick={toggleMoreData}
-        style={{ marginTop: "10px", marginBottom: "20px" }}
-      />
 
       <div id="events">
         <div>
