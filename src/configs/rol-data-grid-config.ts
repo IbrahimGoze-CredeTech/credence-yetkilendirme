@@ -9,10 +9,25 @@ export const rolDataGridConfig: IDataGridOptions = {
   showRowLines: true,
   columns: [
     { dataField: "rolAdi", caption: "Rol" },
-    { dataField: "baslangicTarihi", caption: "Başlangıç Tarihi" },
-    { dataField: "bitisTarihi", caption: "Bitiş Tarihi" },
+    {
+      dataField: "baslangicTarihi",
+      caption: "Başlangıç Tarihi",
+      dataType: "date",
+      format: "dd.MM.yyyy",
+    },
+    {
+      dataField: "bitisTarihi",
+      caption: "Bitiş Tarihi",
+      dataType: "date",
+      format: "dd.MM.yyyy",
+    },
     { dataField: "talepEden", caption: "Talep Eden" },
     { dataField: "onaylayan", caption: "Onaylayan" },
-    { dataField: "onaylanmaTarihi", caption: "Onaylanma Tarihi" },
+    {
+      dataField: "onaylanmaTarihi",
+      caption: "Onaylanma Tarihi",
+      dataType: "date",
+      format: "dd.MM.yyyy",
+    },
   ],
 };

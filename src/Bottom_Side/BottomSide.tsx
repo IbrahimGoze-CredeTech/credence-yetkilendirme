@@ -8,15 +8,16 @@ import DataGrid, {
   FilterRow,
   MasterDetail,
 } from "devextreme-react/data-grid";
-import { Kisi } from "../types";
+import { EkstraYetki, Kisi } from "../types";
 import { yetkiDataGridConfig } from "../configs/yetki-data-grid-config";
 import { rolDataGridConfig } from "../configs/rol-data-grid-config";
 import { ekstraYetkilerDataGridConfig } from "../configs/ekstra-yetkiler-data-grid-config";
+import { SavedEvent } from "devextreme/ui/data_grid";
 
 const App = () => {
   const [events, setEvents] = useState<string[]>([]);
   const [employees, setEmployees] = useState<Kisi[]>([]); // API'den gelecek roller için state
-  const [showMoreData, setShowMoreData] = useState(false); // Yeni grid'in görünürlüğü için state
+  // const [showMoreData, setShowMoreData] = useState(false); // Yeni grid'in görünürlüğü için state
 
 
   useEffect(() => {
@@ -37,7 +38,7 @@ const App = () => {
         const [bilgilerData, yetkilerData] = await Promise.all([bilgilerFetch, yetkilerFetch]);
         if (bilgilerData && yetkilerData) {
           setEmployees(bilgilerData);
-          console.log('bilgilerData: ', bilgilerData);
+          // console.log('bilgilerData: ', bilgilerData);
 
         }
       } catch (error) {
@@ -56,9 +57,9 @@ const App = () => {
   }, []);
 
   // Daha fazla/daha az butonuna basıldığında çağrılan fonksiyon
-  const toggleMoreData = () => {
-    setShowMoreData((prevState) => !prevState); // Grid'in görünürlüğünü değiştiriyoruz
-  };
+  // const toggleMoreData = () => {
+  //   setShowMoreData((prevState) => !prevState); // Grid'in görünürlüğünü değiştiriyoruz
+  // };
 
   return (
     <>
@@ -79,7 +80,6 @@ const App = () => {
           allowAdding={true}
           useIcons={true}
         >
-          {/* Popup özelliklerini yapılandırıyoruz */}
           <Popup
             title="Rol Düzenle"
             showTitle={true}
@@ -150,15 +150,15 @@ const App = () => {
                 dataSource={data.data.ekstraYetkiler} // Nested data from ekstraYetkiler
                 showBorders={true}
                 {...ekstraYetkilerDataGridConfig}
+                onSaved={(e: SavedEvent<EkstraYetki>) => { console.log('Saved! ', e.changes[0].data.ekstraYetkiBaslangicTarihi) }}
               >
                 <Editing
-                  mode="popup" // Düzenleme işlemi popup içinde yapılacak
+                  mode="popup"
                   allowUpdating={true}
                   allowDeleting={true}
                   allowAdding={true}
                   useIcons={true}
                 >
-                  {/* Popup özelliklerini yapılandırıyoruz */}
                   <Popup
                     title="Rol Düzenle"
                     showTitle={true}
