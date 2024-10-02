@@ -38,7 +38,7 @@ const App = () => {
         const [bilgilerData, yetkilerData] = await Promise.all([bilgilerFetch, yetkilerFetch]);
         if (bilgilerData && yetkilerData) {
           setEmployees(bilgilerData);
-          // console.log('bilgilerData: ', bilgilerData);
+          console.log('bilgilerData: ', bilgilerData);
 
         }
       } catch (error) {

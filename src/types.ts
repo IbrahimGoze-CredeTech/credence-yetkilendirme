@@ -18,6 +18,14 @@ export enum authorityDataKeys {
 //   siniflandirma: string;
 // };
 
+export type KisiOzet = {
+  id: number;
+  ad: string;
+  soyad: string;
+  roller: string[];
+  departman: string | null;
+};
+
 export type Kisi = {
   kisiAdi: string;
   kisiSoyadi: string;

@@ -1,12 +1,13 @@
-import BottomSide from "./Bottom_Side/BottomSide";
+// import BottomSide from "./Bottom_Side/BottomSide";
+import SummaryDataGrid from "./components/summary-data-grid";
 import NavBar from "./NavBar";
 import "devextreme/dist/css/dx.light.css";
 
 export default function App() {
-  
-  const userName = "Alper";         
-  const userSurname = "Özpınar";   
-  const userRole = "Admin";   
+
+  const userName = "Alper";
+  const userSurname = "Özpınar";
+  const userRole = "Admin";
 
   return (
     <>
@@ -17,7 +18,8 @@ export default function App() {
         </div>
 
         <div style={{ height: "90%" }} className="flex flex-col p-4">
-          <BottomSide />
+          {/* <BottomSide /> */}
+          <SummaryDataGrid />
         </div>
       </div>
     </>
