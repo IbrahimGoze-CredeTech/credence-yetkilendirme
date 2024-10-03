@@ -23,6 +23,7 @@ export type KisiOzet = {
   ad: string;
   soyad: string;
   roller: string[];
+  yetkiler: string[];
   departman: string | null;
 };
 

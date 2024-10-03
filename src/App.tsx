@@ -1,5 +1,7 @@
 // import BottomSide from "./Bottom_Side/BottomSide";
+// import BottomSide from "./Bottom_Side/BottomSide";
 import SummaryDataGrid from "./components/summary-data-grid";
+import DetailDataGridModal from "./detail-data-grid-modal";
 import NavBar from "./NavBar";
 import "devextreme/dist/css/dx.light.css";
 
@@ -12,6 +14,7 @@ export default function App() {
   return (
     <>
       <div className="h-screen w-full">
+        <DetailDataGridModal />
         <div style={{ height: "10%" }} className="w-full">
           {/* Kullanıcı bilgilerini NavBar bileşenine geçiyoruz */}
           <NavBar userName={userName} userSurname={userSurname} userRole={userRole} />

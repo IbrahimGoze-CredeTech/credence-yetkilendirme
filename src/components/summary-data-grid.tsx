@@ -2,9 +2,12 @@ import DataGrid, { Column, FilterRow, HeaderFilter } from "devextreme-react/data
 import { useEffect, useState } from "react";
 import { KisiOzet } from "../types";
 import { roles } from "../modals/roller";
+import { yetkilerAdi } from "../modals/yetkiler";
+import { useModalContext } from "../context";
 
 export default function SummaryDataGrid() {
   const [kisiOzet, setKisiOzet] = useState<KisiOzet[]>([])
+  const modalContext = useModalContext();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,11 +31,20 @@ export default function SummaryDataGrid() {
       value: item
     };
   }
-  const productsHeaderFilter = {
+  const rolesHeaderFilter = {
     dataSource: {
       store: {
         type: "array",
         data: roles
+      },
+      map: rolesToFilterItem
+    }
+  };
+  const yetkilerHeaderFilter = {
+    dataSource: {
+      store: {
+        type: "array",
+        data: yetkilerAdi
       },
       map: rolesToFilterItem
     }
@@ -68,6 +80,9 @@ export default function SummaryDataGrid() {
         id="kisiOzet"
         keyExpr="id"
         dataSource={kisiOzet}
+        showRowLines={true}
+        showBorders={true}
+        onRowClick={(e) => { modalContext.toggle() }}
       >
         <FilterRow visible={true} />
         <HeaderFilter visible={true} />
@@ -105,12 +120,21 @@ export default function SummaryDataGrid() {
           dataField="roller"
           caption="Rol"
           dataType="string"
-          headerFilter={productsHeaderFilter}
+          headerFilter={rolesHeaderFilter}
           calculateFilterExpression={calculateFilterExpression}
           filterOperations={rolesFilterOperations}
         >
           <HeaderFilter dataSource={roles} />
         </Column>
+
+        <Column
+          dataField="yetkiler"
+          caption="Yetki"
+          dataType="string"
+          calculateFilterExpression={calculateFilterExpression}
+          filterOperations={rolesFilterOperations}
+          headerFilter={yetkilerHeaderFilter}
+        ><HeaderFilter dataSource={yetkilerAdi} /></Column>
 
       </DataGrid>
     </>

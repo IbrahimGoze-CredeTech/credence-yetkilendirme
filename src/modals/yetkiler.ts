@@ -75,3 +75,5 @@ export const yetkiler = [
     // siniflandirma: null,
   },
 ];
+
+export const yetkilerAdi = yetkiler.map((yetki) => yetki.yetkiAdi);

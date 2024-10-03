@@ -24,10 +24,10 @@ const App = () => {
     const fetchData = async () => {
 
       // API'den verileri fetch ile alma
-      const yetkilerFetch = fetch('https://localhost:7210/api/Yetki').then((response) => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
-      });
+      // const yetkilerFetch = fetch('https://localhost:7210/api/Yetki').then((response) => {
+      //   if (!response.ok) throw new Error('Network response was not ok');
+      //   return response.json();
+      // });
       const bilgilerFetch = fetch("https://localhost:7210/api/Kisi/butun-bilgiler/2") // API URL'nizi buraya ekleyin
         .then((response) => {
           if (!response.ok) throw new Error("Network response was not ok");
@@ -35,8 +35,8 @@ const App = () => {
         })
 
       try {
-        const [bilgilerData, yetkilerData] = await Promise.all([bilgilerFetch, yetkilerFetch]);
-        if (bilgilerData && yetkilerData) {
+        const [bilgilerData] = await Promise.all([bilgilerFetch]);
+        if (bilgilerData) {
           setEmployees(bilgilerData);
           console.log('bilgilerData: ', bilgilerData);
 
@@ -153,7 +153,7 @@ const App = () => {
                 onSaved={(e: SavedEvent<EkstraYetki>) => { console.log('Saved! ', e.changes[0].data.ekstraYetkiBaslangicTarihi) }}
               >
                 <Editing
-                  mode="popup"
+                  mode="row"
                   allowUpdating={true}
                   allowDeleting={true}
                   allowAdding={true}

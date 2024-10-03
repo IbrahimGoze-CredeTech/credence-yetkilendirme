@@ -1,5 +1,5 @@
 import { IDataGridOptions } from "devextreme-react/data-grid";
-import { yetkiler } from "./yetki-data-grid-config";
+import { yetkiler } from "../modals/yetkiler";
 
 export const ekstraYetkilerDataGridConfig: IDataGridOptions = {
   id: "ekstraYetkilerdatagrid",
