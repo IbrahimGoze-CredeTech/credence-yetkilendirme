@@ -4,6 +4,8 @@ type ModalContextType = {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   toggle: () => void;
+  id: number;
+  setId: (id: number) => void;
   // companies?: Company[];
   // setCompanies?: (companies: Company[]) => void;
   // position: { x: number, y: number };
@@ -16,6 +18,7 @@ export function ModalContextWrapper({ children }: {
   children: React.ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [id, setId] = useState<number>(0);
   // const [companies, setCompanies] = useState<Company[]>([]);
   // const [position, setPosition] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
 
@@ -28,9 +31,8 @@ export function ModalContextWrapper({ children }: {
   // const closeChat = () => setIsOpen(false);
   const value: ModalContextType = {
     isOpen, setIsOpen,
-    // position,
-    // setPosition,
     toggle,
+    id, setId,
     // companies,
     // setCompanies
   }

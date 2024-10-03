@@ -32,7 +32,7 @@ export default function DetailDataGridModal() {
       //   if (!response.ok) throw new Error('Network response was not ok');
       //   return response.json();
       // });
-      const bilgilerFetch = fetch("https://localhost:7210/api/Kisi/butun-bilgiler/2") // API URL'nizi buraya ekleyin
+      const bilgilerFetch = fetch(`https://localhost:7210/api/Kisi/butun-bilgiler/${modalContext.id}`) // API URL'nizi buraya ekleyin
         .then((response) => {
           if (!response.ok) throw new Error("Network response was not ok");
           return response.json();
@@ -42,7 +42,7 @@ export default function DetailDataGridModal() {
         const [bilgilerData] = await Promise.all([bilgilerFetch]);
         if (bilgilerData) {
           setEmployees(bilgilerData);
-          console.log('bilgilerData: ', bilgilerData);
+          // console.log('bilgilerData: ', bilgilerData);
 
         }
       } catch (error) {

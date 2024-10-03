@@ -82,7 +82,12 @@ export default function SummaryDataGrid() {
         dataSource={kisiOzet}
         showRowLines={true}
         showBorders={true}
-        onRowClick={(e) => { modalContext.toggle() }}
+        onRowClick={(e) => {
+          console.log('e: ', e.data);
+
+          modalContext.setId(e.data.id);
+          modalContext.toggle();
+        }}
       >
         <FilterRow visible={true} />
         <HeaderFilter visible={true} />
