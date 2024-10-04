@@ -65,12 +65,12 @@ export default function DetailDataGridModal() {
   }, [modalContext?.isOpen]);
 
   return (
-    <div style={{ position: 'fixed', zIndex: 9997 }} className={`top-0 flex items-start justify-center w-full bg-gray-400/15 backdrop-blur-sm  min-h-[100vh] h-full overflow-auto ${modalContext?.isOpen ? "visible" : "hidden"}`} onPointerDown={(e) => {
+    <div style={{ position: 'fixed', zIndex: 2 }} className={`top-0 flex items-start justify-center w-full bg-gray-400/15 backdrop-blur-sm  min-h-[100vh] h-full overflow-auto ${modalContext?.isOpen ? "visible" : "hidden"}`} onPointerDown={(e) => {
       e.stopPropagation();
       modalContext.toggle();
     }}>
-      <div style={{ position: 'relative', pointerEvents: "auto", userSelect: "none", zIndex: 9998, top: "20%" }}
-        className="w-[80vw] min-h-[65vh] bg-white p-4 rounded-md" onPointerDown={(e) => e.stopPropagation()}>
+      <div style={{ position: 'relative', pointerEvents: "auto", userSelect: "none", zIndex: 3, top: "20%" }}
+        className="w-[80vw] bg-white p-4 rounded-md" onPointerDown={(e) => e.stopPropagation()}>
         <DataGrid
           id="gridContainer"
           dataSource={[employees]} // Burada roller verisini kullanıyoruz

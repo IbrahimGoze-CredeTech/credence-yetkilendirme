@@ -1,6 +1,6 @@
 import DataGrid, { Column, FilterRow, HeaderFilter } from "devextreme-react/data-grid";
 import { useEffect, useState } from "react";
-import { KisiOzet } from "../types";
+import { KisiOzet, Yetki } from "../types";
 import { roles } from "../modals/roller";
 import { yetkilerAdi } from "../modals/yetkiler";
 import { useModalContext } from "../context";
@@ -25,7 +25,8 @@ export default function SummaryDataGrid() {
   ///-----
 
   const rolesFilterOperations = ["contains", "endswith", "=", "startswith"];
-  function rolesToFilterItem(item) {
+  function rolesToFilterItem(item: string) {
+    console.log('item: ', item);
     return {
       text: item,
       value: item
@@ -49,30 +50,29 @@ export default function SummaryDataGrid() {
       map: rolesToFilterItem
     }
   };
-  function calculateFilterExpression(filterValue, selectedFilterOperation, target) {
+  function calculateFilterExpression(filterValue: string, selectedFilterOperation: string | null = '=') {
     const column = this;
+
     if (filterValue) {
-      const selector = (data) => {
-        const applyOperation = (arg1, arg2, op) => {
+      const selector = (data: KisiOzet) => {
+        const applyOperation = (arg1: string, arg2: string, op: string) => {
           if (op === "=") return arg1 === arg2;
           if (op === "contains") return arg1.includes(arg2);
           if (op === "startswith") return arg1.startsWith(arg2);
           if (op === "endswith") return arg1.endsWith(arg2);
         };
 
+        // console.log('v: ', v);
         const values = column.calculateCellValue(data);
         return (
           values &&
-          !!values.find((v) =>
-            applyOperation(v, filterValue, selectedFilterOperation)
-          )
+          !!values.find((v: string) => applyOperation(v, filterValue, selectedFilterOperation ?? '='))
         );
       };
       return [selector, "=", true];
     }
     return column.defaultCalculateFilterExpression.apply(this, arguments);
   }
-
 
   return (
     <>
@@ -83,7 +83,7 @@ export default function SummaryDataGrid() {
         showRowLines={true}
         showBorders={true}
         onRowClick={(e) => {
-          console.log('e: ', e.data);
+          // console.log('e: ', e.data);
 
           modalContext.setId(e.data.id);
           modalContext.toggle();
@@ -92,22 +92,6 @@ export default function SummaryDataGrid() {
         <FilterRow visible={true} />
         <HeaderFilter visible={true} />
 
-
-        {/* <Paging enabled={true} /> */}
-        {/* <Editing
-        mode="popup" // Düzenleme işlemi popup içinde yapılacak
-        allowUpdating={true}
-        allowDeleting={true}
-        allowAdding={true}
-        useIcons={true}
-        >
-        <Popup
-        title="Rol Düzenle"
-        showTitle={true}
-        width={700}
-        height={600}
-        />
-        </Editing> */}
         <Column
           dataField="ad"
           caption="Ad"
