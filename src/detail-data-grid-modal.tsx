@@ -14,6 +14,7 @@ import { SavedEvent } from "devextreme/ui/data_grid";
 import { rolDataGridConfig } from './configs/rol-data-grid-config';
 import { yetkiDataGridConfig } from './configs/yetki-data-grid-config';
 import { ekstraYetkilerDataGridConfig } from './configs/ekstra-yetkiler-data-grid-config';
+import { formatDate } from './utils';
 
 export default function DetailDataGridModal() {
   const modalContext = useModalContext();
@@ -63,6 +64,37 @@ export default function DetailDataGridModal() {
       document.body.style.overflow = ''; // Ensure scroll is unlocked on cleanup
     };
   }, [modalContext?.isOpen]);
+
+  const handleEkstraYetkiSaved = async (e) => {
+    // console.log('Ekstra yetki saved:', e.data);
+
+    const newEkstraYetki = {
+      ...e.data,
+      kisiId: modalContext.id,
+      ekstraYetkiBaslangicTarihi: formatDate(e.data.ekstraYetkiBaslangicTarihi), // Converts Date to "YYYY-MM-DD"
+      ekstraYetkiBitisTarihi: formatDate(e.data.ekstraYetkiBitisTarihi),
+      ekstraYetkiOnaylanmaTarihi: formatDate(e.data.ekstraYetkiOnaylanmaTarihi),
+    };
+
+    try {
+      const response = await fetch('https://localhost:7210/api/Kisi/ekstra-yetki-ekle', {
+        method: 'POST', // Use POST for creating new resources
+        headers: {
+          'Content-Type': 'application/json', // Set the request content type to JSON
+        },
+        body: JSON.stringify(newEkstraYetki), // Convert the data object to a JSON string
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Ekstra yetki successfully saved:', result);
+      } else {
+        console.error('Failed to save ekstra yetki:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error saving ekstra yetki:', error);
+    }
+  };
 
   return (
     <div style={{ position: 'fixed', zIndex: 2 }} className={`top-0 flex items-start justify-center w-full bg-gray-400/15 backdrop-blur-sm  min-h-[100vh] h-full overflow-auto ${modalContext?.isOpen ? "visible" : "hidden"}`} onPointerDown={(e) => {
@@ -134,22 +166,19 @@ export default function DetailDataGridModal() {
                 <DataGrid
                   dataSource={data.data.yetkiler} // Nested data from yetkiler
                   showBorders={true}
-                  {...yetkiDataGridConfig}
-                >
-                  <Editing
+                  {...yetkiDataGridConfig}>
+                  {/* <Editing
                     mode="row"
                     allowUpdating={true}
                     allowDeleting={true}
                     allowAdding={true}
-                    useIcons={true}
-                  >
+                    useIcons={true}>
                     <Popup
                       title="Yetki Düzenle"
                       showTitle={true}
                       width={700}
-                      height={600}
-                    />
-                  </Editing>
+                      height={600} />
+                  </Editing> */}
                 </DataGrid>
 
                 {/* EkstraYetkiler Sub-grid */}
@@ -158,6 +187,7 @@ export default function DetailDataGridModal() {
                   dataSource={data.data.ekstraYetkiler} // Nested data from ekstraYetkiler
                   showBorders={true}
                   {...ekstraYetkilerDataGridConfig}
+                  onRowInserted={handleEkstraYetkiSaved}
                   onSaved={(e: SavedEvent<EkstraYetki>) => { console.log('Saved! ', e.changes[0].data.ekstraYetkiBaslangicTarihi) }}
                 >
                   <Editing

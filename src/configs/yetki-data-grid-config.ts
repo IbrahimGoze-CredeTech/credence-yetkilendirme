@@ -1,5 +1,6 @@
 import { IDataGridOptions } from "devextreme-react/data-grid";
 import { yetkiler } from "../modals/yetkiler";
+import { eylemTuru } from "../modals/eylemTuru";
 
 export const yetkiDataGridConfig: IDataGridOptions = {
   id: "yekidatagrid",
@@ -20,5 +21,14 @@ export const yetkiDataGridConfig: IDataGridOptions = {
       },
     },
     { dataField: "rolAdi", caption: "Rol" },
+    {
+      dataField: "eylemlerTuruId",
+      caption: "Eylem Türü",
+      lookup: {
+        dataSource: eylemTuru,
+        valueExpr: "eylemTuruId",
+        displayExpr: "eylemAdi",
+      },
+    },
   ],
 };

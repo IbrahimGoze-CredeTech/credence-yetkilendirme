@@ -1,4 +1,5 @@
 import { IDataGridOptions } from "devextreme-react/data-grid";
+import { roles } from "../modals/roller";
 
 export const rolDataGridConfig: IDataGridOptions = {
   id: "roldatagrid",
@@ -8,7 +9,15 @@ export const rolDataGridConfig: IDataGridOptions = {
   columnAutoWidth: true,
   showRowLines: true,
   columns: [
-    { dataField: "rolAdi", caption: "Rol" },
+    {
+      dataField: "rolAdi",
+      caption: "Rol",
+      lookup: {
+        dataSource: roles,
+        valueExpr: "rolAdi",
+        displayExpr: "rolAdi",
+      },
+    },
     {
       dataField: "baslangicTarihi",
       caption: "Başlangıç Tarihi",
