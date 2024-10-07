@@ -33,7 +33,7 @@ export default function DetailDataGridModal() {
       //   if (!response.ok) throw new Error('Network response was not ok');
       //   return response.json();
       // });
-      const bilgilerFetch = fetch(`https://localhost:7210/api/Kisi/butun-bilgiler/${modalContext.id}`) // API URL'nizi buraya ekleyin
+      const bilgilerFetch = fetch(`http://192.168.30.90:98/api/Kisi/butun-bilgiler/${modalContext.id}`) // API URL'nizi buraya ekleyin
         .then((response) => {
           if (!response.ok) throw new Error("Network response was not ok");
           return response.json();
@@ -77,7 +77,7 @@ export default function DetailDataGridModal() {
     };
 
     try {
-      const response = await fetch('https://localhost:7210/api/Kisi/ekstra-yetki-ekle', {
+      const response = await fetch('http://192.168.30.90:98/api/Kisi/ekstra-yetki-ekle', {
         method: 'POST', // Use POST for creating new resources
         headers: {
           'Content-Type': 'application/json', // Set the request content type to JSON

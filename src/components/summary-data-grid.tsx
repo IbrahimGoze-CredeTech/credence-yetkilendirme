@@ -11,7 +11,7 @@ export default function SummaryDataGrid() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("https://localhost:7210/api/Kisi/ozet-bilgi").then((response) => {
+      const response = await fetch("http://192.168.30.90:98/api/Kisi/ozet-bilgi").then((response) => {
         if (!response.ok) throw new Error("Network response was not ok");
         return response.json();
       })
